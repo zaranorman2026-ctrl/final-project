@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JOUR 425 Group Project</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Token system ─────────────────────────────────────── */
+    :root {
+      --purple:        #4E2A84;   /* Northwestern official purple */
+      --purple-dark:   #3a1f63;
+      --purple-mid:    #6b3fa0;
+      --purple-light:  #f3eeff;
+      --gold:          #B6A369;   /* NU secondary gold */
+      --black:         #111111;
+      --ink:           #1c1c1c;
+      --muted:         #5a5a5a;
+      --rule:          #d9d0e8;
+      --bg:            #ffffff;
+      --serif-display: 'Playfair Display', Georgia, serif;
+      --serif-body:    'Source Serif 4', Georgia, serif;
+      --sans:          'Inter', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--serif-body);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.7;
+    }
+
+    /* ── Masthead ─────────────────────────────────────────── */
+    .masthead {
+      background: var(--purple);
+      padding: 0;
+      position: relative;
+    }
+
+    .masthead-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px 12px;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .masthead-logo {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .masthead-wordmark {
+      font-family: var(--serif-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .masthead-sub {
+      font-family: var(--sans);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+      align-self: flex-end;
+      padding-bottom: 3px;
+    }
+
+    .masthead-date {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Nav strip ────────────────────────────────────────── */
+    .nav-strip {
+      background: var(--purple-dark);
+      padding: 0 40px;
+      display: flex;
+      gap: 0;
+    }
+
+    .nav-strip a {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      padding: 10px 16px;
+      display: block;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .nav-strip a:first-child { border-left: 1px solid rgba(255,255,255,0.1); }
+    .nav-strip a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .nav-strip a.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+
+    /* ── Hero banner (signature element) ─────────────────── */
+    .hero {
+      background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 55%, var(--purple-mid) 100%);
+      padding: 52px 40px 44px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero-eyebrow {
+      font-family: var(--sans);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 28px;
+      height: 2px;
+      background: var(--gold);
+    }
+
+    .hero-headline {
+      font-family: var(--serif-display);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      max-width: 780px;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .hero-deck {
+      font-family: var(--serif-body);
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.82);
+      max-width: 620px;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    /* ── Article layout ───────────────────────────────────── */
+    .article-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 56px;
+    }
+
+    /* ── Byline bar ───────────────────────────────────────── */
+    .byline-bar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 28px;
+    }
+
+    .byline-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--purple-light);
+      border: 2px solid var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--purple);
+      flex-shrink: 0;
+    }
+
+    .byline-meta { flex: 1; }
+
+    .byline-name {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--purple);
+    }
+
+    .byline-role {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .byline-timestamp {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Main article body ────────────────────────────────── */
+    .article-body {
+      padding: 36px 0 60px;
+    }
+
+    .article-body p {
+      font-size: 1.05rem;
+      line-height: 1.78;
+      color: var(--ink);
+      margin-bottom: 1.4em;
+    }
+
+    .article-body p:first-of-type::first-letter {
+      font-family: var(--serif-display);
+      font-size: 4.2em;
+      font-weight: 900;
+      color: var(--purple);
+      float: left;
+      line-height: 0.78;
+      margin: 0.06em 0.1em 0 0;
+    }
+
+    .pull-quote {
+      border-left: 4px solid var(--gold);
+      margin: 2em 0;
+      padding: 16px 24px;
+      background: var(--purple-light);
+    }
+
+    .pull-quote blockquote {
+      font-family: var(--serif-display);
+      font-size: 1.3rem;
+      font-style: italic;
+      font-weight: 700;
+      color: var(--purple-dark);
+      line-height: 1.4;
+    }
+
+    .pull-quote cite {
+      display: block;
+      margin-top: 10px;
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .section-rule {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 2em 0;
+    }
+
+    .article-subhead {
+      font-family: var(--serif-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--purple);
+      margin: 2em 0 0.6em;
+      line-height: 1.25;
+    }
+
+    /* ── Image block ──────────────────────────────────────── */
+    .article-image {
+      margin: 2em 0;
+    }
+
+    .article-image-placeholder {
+      width: 100%;
+      height: 320px;
+      background: linear-gradient(160deg, var(--purple-light) 0%, #ddd5f0 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--purple);
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      gap: 8px;
+      border: 1px solid var(--rule);
+    }
+
+    .article-image-placeholder svg { opacity: 0.4; }
+
+    .article-caption {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .article-caption strong {
+      color: var(--ink);
+    }
+
+    /* ── Tags ─────────────────────────────────────────────── */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .tag {
+      font-family: var(--sans);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      background: var(--purple-light);
+      color: var(--purple);
+      border-radius: 2px;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .tag:hover { background: var(--purple); color: #fff; }
+
+    /* ── Sidebar ──────────────────────────────────────────── */
+    .sidebar {
+      padding: 36px 0 60px;
+      border-left: 1px solid var(--rule);
+      padding-left: 32px;
+    }
+
+    .sidebar-section {
+      margin-bottom: 36px;
+    }
+
+    .sidebar-label {
+      font-family: var(--sans);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--purple);
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--purple);
+      margin-bottom: 16px;
+    }
+
+    .related-item {
+      display: block;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--rule);
+      text-decoration: none;
+    }
+
+    .related-item-label {
+      font-family: var(--sans);
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .related-item-title {
+      font-family: var(--serif-body);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.35;
+      transition: color 0.15s;
+    }
+
+    .related-item:hover .related-item-title { color: var(--purple); }
+
+    .related-item-date {
+      font-family: var(--sans);
+      font-size: 0.66rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .stat-block {
+      background: var(--purple);
+      color: #fff;
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+
+    .stat-number {
+      font-family: var(--serif-display);
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.8);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    footer {
+      background: var(--purple-dark);
+      color: rgba(255,255,255,0.65);
+      padding: 32px 40px;
+      margin-top: 40px;
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    footer a { color: var(--gold); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    .footer-wordmark {
+      font-family: var(--serif-display);
+      font-size: 1rem;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    /* ── Responsive ───────────────────────────────────────── */
+    @media (max-width: 800px) {
+      .article-wrapper {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0 20px;
+      }
+      .masthead-top, .nav-strip, .hero { padding-left: 20px; padding-right: 20px; }
+      .sidebar { border-left: none; border-top: 1px solid var(--rule); padding-left: 0; padding-top: 32px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+
+  <!-- ── Masthead ── -->
+  <header class="masthead">
+    <div class="masthead-top">
+      <div class="masthead-logo">
+        <span class="masthead-wordmark">JOUR 425 Group Project</span>
+      </div>
+      <span class="masthead-date">Friday, June 12, 2026 &nbsp;·&nbsp; Washington, D.C.</span>
+    </div>
+  </header>
+
+  <!-- ── Hero ── -->
+  <div class="hero">
+    <h1 class="hero-headline">Medicaid cuts will worsen Alaska’s already strained maternal health system</h1>
+  </div>
+
+  <!-- ── Article ── -->
+  <div class="article-wrapper">
+    <main>
+      <!-- Byline -->
+      <div class="byline-bar">
+        <div class="byline-meta">
+          <div class="byline-name">Elena Tittel, Matthew Junkroski, Yuqing Liu and Zara Norman</div>
+          <div class="byline-role">Data Reporters</div>
+        </div>
+        <div class="byline-timestamp">June 12, 2026</div>
+      </div>
+
+      <!-- Body -->
+      <article class="article-body">
+
+        <p>In Bethel, Dr. Ellen Hodges, chief of staff at the Yukon-Kuskokwim Health Corporation, serves an area nearly the size of Oregon. Here, women fly in a month before their due date to give birth at the hospital’s birth center, which Hodges said they often do so alone.</p>
+
+        <p>“There is no place for their families to stay, so their birthing partner and children usually don’t come with them,” Hodges said.</p>
+
+        <p>Only 19 hospitals in Alaska offer maternity services, <a href="https://www.cdc.gov/breastfeeding/pdf/mpinc/states/2022/alaska-2022-mpinc-report-508.pdf">per a 2022 CDC survey</a>, and half of Alaska’s counties do not have a single obstetric clinician, according to <a href="https://www.marchofdimes.org/peristats/data?reg=02&top=23&stop=642&slev=4&obj=18&sreg=02">2025 data</a> from the March of Dimes. In certain cases, such as in Bethel, only a single hospital in the region offers labor and delivery care, meaning expectant families must travel.</p>
+
+        <p>According to <a href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/traveling-while-pregnant-or-breastfeeding">Johns Hopkins</a>, travel after the second trimester of pregnancy isn’t always advised.</p>
+
+
+<p>“During the third trimester (28 to 40 weeks), many healthcare providers and midwives advise staying within a 300-mile radius of home because of potential problems, such as high blood pressure, phlebitis, and false or preterm labor,” the report read.</p>
+
+<p>In a state that spans 586,000 miles of land, this isn’t always possible. Additionally, Alaska’s in-network costs of birth are the most expensive in the nation at [put it here] — something Jared Kosin, president & CEO of the Alaska Hospital and Healthcare Association, associates with difficulty of keeping healthcare professionals.</p>
+
+<p>“You'll notice, especially if you're looking at private insurance reimbursement, we tend to have higher contractuals up here because it's harder for us to recruit certain specialties to Alaska, especially rural areas,” Kosin said.</p>
+
+<div class="flourish-embed flourish-map" data-src="visualisation/29343300"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/29343300/thumbnail" width="100%" alt="map visualization" /></noscript></div>
+
+
+        <p>The birth rate overall in Alaska is declining over the past five years, due to Medicaid cuts and the distance of travel to major facilities from rural areas. Approximately 75% of Alaskan communities, including the capital city of Juneau, are not connected to a road system.</p>
+
+        <p>Cuts to Medicaid, a federal insurance program providing low-income Americans with medical coverage, will challenge Alaska’s already strained maternal health system even further. A bill signed into law by President Donald Trump last year will <a href="https://www.cbo.gov/publication/61570">cut more a trillion dollars</a> from the program and <a href="https://www.notus.org/healthcare/trump-medicaid-work-requirements-regulation">introduce new work requirements</a> impacting who’s eligible to benefit from it.</p>
+
+<div class="flourish-embed flourish-map" data-src="visualisation/29338393"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/29338393/thumbnail" width="100%" alt="map visualization" /></noscript></div>
+
+
+<p>While 69% of Medicaid expansion enrollees in Alaska are subject to those requirements, many are exempt, including pregnant women and American Indian/Alaska Native individuals, according to the <a href="https://health.alaska.gov/media/qfph4aef/alaska-community-engagement-requirements-modeling-feb-2026.pdf">Alaskan Department of Health</a>.</p>
+
+<p>Despite that — and a <a href="https://health.alaska.gov/en/education/rural-health-transformation-program/">rural health fund</a> designated by Congress last year to shore up funding gaps — rural health providers still say that the fact that <a href="https://health.alaska.gov/media/qfph4aef/alaska-community-engagement-requirements-modeling-feb-2026.pdf">37.5% of expansion enrollees</a> are projected to lose coverage will impact tribal and maternal health.</p>
+
+<p>More than half of all Alaskan births are covered by Medicaid, compared to the U.S. average of 42%, according to a 2025 report from the Alaska Hospital and Healthcare Association.</p>
+
+<p>“Cuts to Medicaid or eligibility restrictions would significantly impact maternal and infant healthcare access in the state,” that report read.</p>
+
+<img src="medicaid_chart (1).png" alt="Medicaid Births per region, graph by Alaska Hospital & Healthcare Association">
+
+<p>Over the past 20 years, five hospitals have discontinued providing birth services, according to the AHHA, and without the income from Medicaid, three more are at risk of shuttering, per a study by UNC’s Cecil G. Sheps Center. Any closures would lengthen rural, expectant Alaskans’ travel distances.</p>
+
+<p>In the midst of increasing hospital costs and growing travel distances in Alaska, home births and birthing centers are becoming increasingly popular for those with lower-risk pregnancies, making up 8% of all Alaskan births in 2024.</p>
+
+<p>Midwives in Alaska offer Alaskans options for care closer to home. According to a 2017 study of midwifery in Alaska, their care is associated with a decreased risk of both c-section births and preterm or low birth weight infants.</p>
+
+<p>Not only are these births less expensive than hospital births, but they’re covered by Medicaid. Alaska is one of 19 states to offer Medicaid reimbursement for both certified nurse-midwives, who have a nursing degree, and midwives without a background in nursing, according to the National Academy for State Health Policy.</p>
+
+<p>Over 90% of home births were attended by midwives in 2017 according to the 2017 midwifery study, which also said care from these midwives reduced costs through an infant’s first birthday by 21%.</p>
+
+<p>“Overall, our results suggest that receiving prenatal care [with a midwife] is an effective and high-quality option for low-risk pregnancies served by the Medicaid program,” the report read.</p>
+
+<p>According to the United States Government Accountability Office, Alaska had the highest percentage of midwife-attended births of any state in the U.S. at 31.9% in 2021. Despite this, in the same year, the American Midwife Certification Board reported only 110 registered midwives in the state.</p>
+
+<p>Despite how few midwives Alaska has, they comprise an increasing number of birth-attending medical professionals, reaching 35.1% of all medical attendants in 2024.</p>
+
+<div class="flourish-embed flourish-chart" data-src="visualisation/29345168"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/29345168/thumbnail" width="100%" alt="chart visualization" /></noscript></div>
+
+<p>Anchorage serves as a regional hub for childbirth in Alaska, where obstetric care is unevenly distributed across a geographically vast state. A March of Dimes report showed that the city is home to the state’s only facility handling more than 2,000 births annually, while residents in parts of central, southeast and southwest Alaska face average travel times of more than an hour to reach a hospital providing obstetric care. In 2024, Anchorage residents accounted for 3,488 births, or 39 percent of all Alaska resident births, according to the Alaska Department of Health report.</p>
+
+<p>Yet the city’s role extends beyond its local population. Some patients travel from rural and remote communities to deliver in Anchorage, even though an average travel time for a hospital providing obstetric care is over 60 minutes for residents in the the central, southeast and southwest regions.</p>
+
+<p>The state’s 2024 vital statistics report also shows substantial regional disparities in birth outcomes. Nineteen percent of births among residents of southwest Alaska were preterm, compared with 10% among Anchorage residents. The rate of low-birth-weight births was also higher in southwest Alaska, at 11%, compared with 7% in Anchorage.</p>
+
+
+
+      </article>
+    </main>
+
+</body>
+</html>
